@@ -15,6 +15,8 @@ class ViewController: UITableViewController {
 
         title = "Storm"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
 
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
@@ -48,5 +50,12 @@ class ViewController: UITableViewController {
             navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    @objc func shareTapped() {        
+        let vc = UIActivityViewController(activityItems: ["share this app with your friedns"], applicationActivities: [])
+        vc.popoverPresentationController?.sourceView = self.view
+        present(vc, animated: true)
+    }
+
 }
 
