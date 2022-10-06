@@ -16,11 +16,11 @@ class ViewController: UITableViewController {
         title = "Country Flags"
         navigationController?.navigationBar.prefersLargeTitles = true
         
-//        let fm = FileManager.default
-//        let path = Bundle.main.resourcePath!
-//        let items = try! fm.contentsOfDirectory(atPath: path)
-//        let car = items.firstIndex(of: "Assets.car")
-//        print("here's where I'm printing \(items)")
+        let fm = FileManager.default
+        let path = Bundle.main.resourcePath!
+        let items = try! fm.contentsOfDirectory(atPath: path)
+        let car = items.firstIndex(of: "Assets.car")
+        print("here's where I'm printing \(items)")
         
         flags += ["estonia", "france", "germany", "ireland", "italy", "monaco", "nigeria", "poland", "russia", "spain", "uk", "us"]
         flags.sort()
@@ -34,6 +34,8 @@ class ViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Country", for: indexPath)
         cell.textLabel?.text = flags[indexPath.row].uppercased()
         cell.imageView?.image = UIImage(named: flags[indexPath.row])
+        cell.imageView?.layer.borderWidth = 1
+//        cell.imageView?.layer.borderColor = UIColor.white.cgColor
         return cell
     }
     
