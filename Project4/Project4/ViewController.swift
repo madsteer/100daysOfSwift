@@ -26,12 +26,14 @@ class ViewController: UIViewController, WKNavigationDelegate {
         
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let refresh = UIBarButtonItem(barButtonSystemItem: .refresh, target: webView, action: #selector(webView.reload))
+        let goBack = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(safeGoBack))
+        let goForward = UIBarButtonItem(title: "Forward", style: .plain, target: self, action: #selector(safeGoForward))
         
         progressView = UIProgressView(progressViewStyle: .default)
         progressView.sizeToFit()
         let progressButton = UIBarButtonItem(customView: progressView)
         
-        toolbarItems = [progressButton, spacer, refresh]
+        toolbarItems = [goBack, goForward, spacer, progressButton, spacer, refresh]
         navigationController?.isToolbarHidden = false
         
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
@@ -87,6 +89,22 @@ class ViewController: UIViewController, WKNavigationDelegate {
         let ac = UIAlertController(title: "Blocked Site", message: "This is not an approved site to go to.", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
+    }
+    
+    @objc func safeGoBack() {
+        if let page = webView.backForwardList.backItem {
+            if webView.canGoBack {
+                webView.go(to: page)
+            }
+        }
+    }
+    
+    @objc func safeGoForward() {
+        if let page = webView.backForwardList.forwardItem {
+            if webView.canGoForward {
+                webView.go(to: page)
+            }
+        }
     }
 }
 
