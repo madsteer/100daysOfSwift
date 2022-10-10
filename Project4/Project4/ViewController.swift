@@ -11,7 +11,8 @@ import WebKit
 class ViewController: UIViewController, WKNavigationDelegate {
     var webView: WKWebView!
     var progressView: UIProgressView!
-    var websites = ["apple.com", "hackingwithswift.com"]
+    var websites: [String]!
+    var selectedSiteIndex: Int!
     
     override func loadView() {
         webView = WKWebView()
@@ -38,8 +39,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
         
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
         
-//        let url = URL(string: "https://www.hackingwithswift.com")!
-        let url = URL(string: "https://\(websites[0])")!
+        let url = URL(string: "https://\(websites[selectedSiteIndex])")!
         webView.load(URLRequest(url: url))
         webView.allowsBackForwardNavigationGestures = true
     }
@@ -56,7 +56,6 @@ class ViewController: UIViewController, WKNavigationDelegate {
     }
     
     func openPage(action: UIAlertAction) {
-//        let url = URL(string: "http://\(action.title!)")!
         guard let actionTitle = action.title else { return }
         print("action title is \(actionTitle)")
         guard let url = URL(string: "https://\(actionTitle)") else { return }

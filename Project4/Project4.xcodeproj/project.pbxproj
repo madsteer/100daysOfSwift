@@ -13,6 +13,7 @@
 		D852E77128EF18FA000725D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D852E76F28EF18FA000725D8 /* Main.storyboard */; };
 		D852E77328EF18FC000725D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D852E77228EF18FC000725D8 /* Assets.xcassets */; };
 		D852E77628EF18FC000725D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D852E77428EF18FC000725D8 /* LaunchScreen.storyboard */; };
+		D852E77E28F084A8000725D8 /* TableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D852E77D28F084A8000725D8 /* TableTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		D852E77228EF18FC000725D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D852E77528EF18FC000725D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D852E77728EF18FC000725D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D852E77D28F084A8000725D8 /* TableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				D852E76928EF18FA000725D8 /* AppDelegate.swift */,
 				D852E76B28EF18FA000725D8 /* SceneDelegate.swift */,
+				D852E77D28F084A8000725D8 /* TableTableViewController.swift */,
 				D852E76D28EF18FA000725D8 /* ViewController.swift */,
 				D852E76F28EF18FA000725D8 /* Main.storyboard */,
 				D852E77228EF18FC000725D8 /* Assets.xcassets */,
@@ -138,6 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D852E77E28F084A8000725D8 /* TableTableViewController.swift in Sources */,
 				D852E76E28EF18FA000725D8 /* ViewController.swift in Sources */,
 				D852E76A28EF18FA000725D8 /* AppDelegate.swift in Sources */,
 				D852E76C28EF18FA000725D8 /* SceneDelegate.swift in Sources */,
