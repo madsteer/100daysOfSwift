@@ -8,7 +8,7 @@
 import UIKit
 
 class TableTableViewController: UITableViewController {
-        var websites = ["apple.com", "hackingwithswift.com"]
+    var websites = ["apple.com", "hackingwithswift.com"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
