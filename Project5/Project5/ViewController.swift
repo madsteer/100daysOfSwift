@@ -60,8 +60,6 @@ class ViewController: UITableViewController {
 
     func submit(_ answer: String) {
         let lowerAnswer = answer.lowercased()
-        let errorTitle: String
-        let errorMessage: String
         
         if isPossible(word: lowerAnswer) {
             if isOriginal(word: lowerAnswer) {
@@ -72,23 +70,12 @@ class ViewController: UITableViewController {
                     tableView.insertRows(at: [indexPath], with: .automatic)
                     
                     return
-                } else {
-                    errorTitle = "Word not recognized"
-                    errorMessage = "You can't just make them up, you know! "
-                }
-            } else {
-                errorTitle = "Duplicate Word"
-                errorMessage = "Be more original!"
-            }
+                } else { showErrorMessage("Word not recognized", "You can't just make them up, you know!") }
+            } else { showErrorMessage("Duplicate Word", "Be more original!") }
         } else {
             guard let title = title else { return }
-            errorTitle = "Word not possible"
-            errorMessage = "You can't spell that word from '\(title.lowercased())'."
+            showErrorMessage("Word not possible", "You can't spell that word from '\(title.lowercased())'.")
         }
-        
-        let ac = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
     }
     
     func isPossible(word: String) -> Bool {
@@ -115,6 +102,12 @@ class ViewController: UITableViewController {
         let range = NSRange(location: 0, length: word.utf16.count)
         let misspellegRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
         return misspellegRange.location == NSNotFound
+    }
+    
+    func showErrorMessage(_ title: String, _ message: String) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
     }
 }
 
