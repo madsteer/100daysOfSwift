@@ -9,12 +9,15 @@ import UIKit
 
 class ViewController: UITableViewController {
     var petitions = [Petition]()
+    var filteredPetitions = [Petition]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let add = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(filterResults))
         let credits = UIBarButtonItem(title: "Credits",style: .plain, target: self, action: #selector(showCredits))
-        navigationItem.rightBarButtonItem = credits
+        navigationItem.rightBarButtonItem = add
+        navigationItem.leftBarButtonItem = credits
         
         let urlString: String
         
@@ -40,6 +43,7 @@ class ViewController: UITableViewController {
         
         if let jsonPetitions = try? decoder.decode(Petitions.self, from: json) {
             petitions = jsonPetitions.results
+            filteredPetitions = petitions
             tableView.reloadData()
         }
     }
@@ -51,12 +55,12 @@ class ViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return petitions.count
+        return filteredPetitions.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let petition = petitions[indexPath.row]
+        let petition = filteredPetitions[indexPath.row]
         cell.textLabel?.text = petition.title
         cell.detailTextLabel?.text = petition.body
         
@@ -73,6 +77,30 @@ class ViewController: UITableViewController {
         let ac = UIAlertController(title: "Credits", message: "We The People API of the Whitehouse", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
+    }
+    
+    @objc func filterResults() {
+        let ac = UIAlertController(title: "Filter results", message: nil, preferredStyle: .alert)
+        ac.addTextField()
+        
+        let submitAction = UIAlertAction(title: "Filter", style: .default) { [weak self, weak ac] _ in
+            guard let text = ac?.textFields?[0].text else { return }
+            self?.submit(text)
+        }
+        
+        ac.addAction(submitAction)
+        present(ac, animated: true)
+    }
+    
+    func submit(_ item: String) {
+        if item.isEmpty {
+            filteredPetitions = petitions
+        } else {
+            filteredPetitions = petitions.filter { petition in
+                return petition.title.lowercased().contains(item.lowercased())
+            }
+        }
+        tableView.reloadData()
     }
 }
 
