@@ -163,16 +163,25 @@ class ViewController: UIViewController {
             currentAnswer.text = ""
             score += 1
             
-            if score % 7 == 0 {
+            if isLevelFinished() {
                 let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
                 present(ac, animated: true)
             }
         } else {
+            score -= 1
             let ac = UIAlertController(title: "Not quite", message: "That is not a correct guess.", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "OK", style: .default, handler: clearFail))
             present(ac, animated: true)
         }
+    }
+    
+    func isLevelFinished() -> Bool {
+        var result = true
+        for button in letterButtons {
+            result = button.isHidden == true
+        }
+        return result
     }
     
     func levelUp(action: UIAlertAction) {
