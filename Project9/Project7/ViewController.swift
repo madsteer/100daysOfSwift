@@ -110,14 +110,19 @@ class ViewController: UITableViewController {
     }
     
     func submit(_ item: String) {
-        if item.isEmpty {
-            filteredPetitions = petitions
-        } else {
-            filteredPetitions = petitions.filter { petition in
-                return petition.title.lowercased().contains(item.lowercased())
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            if item.isEmpty {
+                self.filteredPetitions = self.petitions
+            } else {
+                self.filteredPetitions = self.petitions.filter { petition in
+                    return petition.title.lowercased().contains(item.lowercased())
+                }
             }
         }
-        tableView.reloadData()
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
+        }
     }
 }
 
