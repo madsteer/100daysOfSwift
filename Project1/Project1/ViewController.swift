@@ -9,17 +9,21 @@ import UIKit
 
 class ViewController: UITableViewController {
     var pictures = [String]()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "Storm"
         navigationController?.navigationBar.prefersLargeTitles = true
 
+        performSelector(inBackground: #selector(fetchImages), with: nil)
+    }
+
+    @objc func fetchImages() {
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
         let items = try! fm.contentsOfDirectory(atPath: path)
-
+        
         for item in items {
             if item.hasPrefix("nssl") {
                 // this is a picture to laod!
@@ -27,6 +31,11 @@ class ViewController: UITableViewController {
             }
         }
         pictures.sort()
+        
+        DispatchQueue.main.async{ [weak self] in
+            self?.tableView.reloadData()
+        }
+        
         print(pictures)
     }
 
