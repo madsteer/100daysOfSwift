@@ -14,6 +14,7 @@ class ViewController: UICollectionViewController, UINavigationControllerDelegate
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPerson))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(createNewPerson))
     }
 
 
@@ -45,6 +46,14 @@ class ViewController: UICollectionViewController, UINavigationControllerDelegate
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    @objc func createNewPerson() {
+        let picker = UIImagePickerController()
+        picker.allowsEditing = true
+        picker.delegate = self
+        picker.sourceType = .camera
         present(picker, animated: true)
     }
     
