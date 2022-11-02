@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D8943B9C291302D7002B3DE4 /* FireParticles.sks in Resources */ = {isa = PBXBuildFile; fileRef = D8943B9B291302D7002B3DE4 /* FireParticles.sks */; };
 		D8CD381A2908959E0015619E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CD38192908959E0015619E /* AppDelegate.swift */; };
 		D8CD381C2908959F0015619E /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D8CD381B2908959F0015619E /* GameScene.sks */; };
 		D8CD38202908959F0015619E /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CD381F2908959F0015619E /* GameScene.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D8943B9B291302D7002B3DE4 /* FireParticles.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = FireParticles.sks; sourceTree = "<group>"; };
 		D8CD38162908959E0015619E /* Project11.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project11.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8CD38192908959E0015619E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8CD381B2908959F0015619E /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 				D8CD38232908959F0015619E /* Main.storyboard */,
 				D8CD3826290895A10015619E /* Assets.xcassets */,
 				D8CD3828290895A10015619E /* LaunchScreen.storyboard */,
+				D8943B9B291302D7002B3DE4 /* FireParticles.sks */,
 			);
 			path = Project11;
 			sourceTree = "<group>";
@@ -128,6 +131,7 @@
 			files = (
 				D8CD38252908959F0015619E /* Main.storyboard in Resources */,
 				D8CD381C2908959F0015619E /* GameScene.sks in Resources */,
+				D8943B9C291302D7002B3DE4 /* FireParticles.sks in Resources */,
 				D8CD3827290895A10015619E /* Assets.xcassets in Resources */,
 				D8CD382A290895A10015619E /* LaunchScreen.storyboard in Resources */,
 			);
