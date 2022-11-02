@@ -21,6 +21,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     let ballColors = ["ballBlue", "ballCyan", "ballGreen", "ballGrey", "ballPurple", "ballRed", "ballYellow"]
+    var maxBallsAllowed = 5
     
     override func didMove(to view: SKView) {
         let background = SKSpriteNode(imageNamed: "background")
@@ -66,13 +67,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if editingMode {
                 let size = CGSize(width: Int.random(in: 16...128), height: 16)
                 let box = SKSpriteNode(color: UIColor(red: CGFloat.random(in: 0...1), green: CGFloat.random(in: 0...1), blue: CGFloat.random(in: 0...1), alpha: 1), size: size)
+                box.name = "box"
                 box.zRotation = CGFloat.random(in: 0...3)
                 box.position = location
                 
                 box.physicsBody = SKPhysicsBody(rectangleOf: box.size)
                 box.physicsBody?.isDynamic = false
                 addChild(box)
-            } else {
+            } else if maxBallsAllowed > 0 {
                 let ballColor = ballColors[Int.random(in: 0..<ballColors.count)]
                 
                 let ball = SKSpriteNode(imageNamed: ballColor)
@@ -84,6 +86,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 ball.position = CGPoint(x: xPosition, y: 690)
                 ball.name = "ball"
                 addChild(ball)
+                maxBallsAllowed -= 1
             }
         }
     }
@@ -126,30 +129,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func collision(between ball: SKNode, and object: SKNode) {
         if object.name == "good" {
-            destroy(ball: ball)
+            destroy(object: ball)
             score += 1
+            maxBallsAllowed += (maxBallsAllowed > 4) ? 0 : 1
         } else if object.name == "bad" {
-            destroy(ball: ball)
+            destroy(object: ball)
             score -= 1
         }
     }
     
-    func destroy(ball: SKNode) {
-        if let fireParticles = SKEmitterNode(fileNamed: "FireParticles") {
-            fireParticles.position = ball.position
-            addChild(fireParticles)
+    func destroy(object: SKNode) {
+        if object.name == "ball" {
+            if let fireParticles = SKEmitterNode(fileNamed: "FireParticles") {
+                fireParticles.position = object.position
+                addChild(fireParticles)
+            }
         }
         
-        ball.removeFromParent()
+        object.removeFromParent()
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        guard let nodeA = contact.bodyA.node else {return }
-        guard let nodeB = contact.bodyB.node else {return }
+        guard let nodeA = contact.bodyA.node else { return }
+        guard let nodeB = contact.bodyB.node else { return }
         
         if nodeA.name == "ball" {
+            if nodeB.name == "box" {
+                destroy(object: nodeB)
+            }
             collision(between: nodeA, and: nodeB)
         } else if nodeB.name == "ball" {
+            if nodeA.name == "box" {
+                destroy(object: nodeA)
+            }
             collision(between: nodeB, and: nodeA)
         }
     }
