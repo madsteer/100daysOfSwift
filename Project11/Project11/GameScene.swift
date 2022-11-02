@@ -20,6 +20,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             editLabel.text = (editingMode) ? "Done" : "Edit"
         }
     }
+    let ballColors = ["ballBlue", "ballCyan", "ballGreen", "ballGrey", "ballPurple", "ballRed", "ballYellow"]
     
     override func didMove(to view: SKView) {
         let background = SKSpriteNode(imageNamed: "background")
@@ -72,7 +73,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 box.physicsBody?.isDynamic = false
                 addChild(box)
             } else {
-                let ball = SKSpriteNode(imageNamed: "ballRed")
+                let ballColor = ballColors[Int.random(in: 0..<ballColors.count)]
+                let ball = SKSpriteNode(imageNamed: ballColor)
                 ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width / 2.0)
                 ball.physicsBody?.restitution = 0.4
                 ball.physicsBody?.contactTestBitMask = ball.physicsBody?.collisionBitMask ?? 0
