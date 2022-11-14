@@ -83,7 +83,7 @@ class ViewController: UITableViewController, UIImagePickerControllerDelegate, UI
         
         let ac = UIAlertController(title: "Add Caption", message: "would you like to add a caption?", preferredStyle: .alert)
         ac.addTextField(configurationHandler: { (textField) -> Void in
-            textField.text = "No Caption"
+            textField.placeholder = "No Caption"
         })
         ac.addAction(UIAlertAction(title: "Add", style: .default) { [weak self, weak ac] _ in
             guard let newCaption = ac?.textFields?[0].text else { return }
