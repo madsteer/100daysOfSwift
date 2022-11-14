@@ -17,9 +17,7 @@ class PictureViewController: UIViewController {
         title = imageCaption
         
         if let imageToLoad = selectedImage {
-            let fqImageName = getDocumentsDirectory().appendingPathExtension(imageToLoad)
-            print("Displaying picture with caption \(imageCaption ?? "<no caption>") and filename \(fqImageName.absoluteString)")
-            imageView.image = UIImage(named: fqImageName.absoluteString)
+            imageView.image = UIImage(named: imageToLoad)
         }
     }
     
@@ -32,10 +30,4 @@ class PictureViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.hidesBarsOnTap = false
     }
-    
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-
 }

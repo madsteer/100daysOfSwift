@@ -44,54 +44,17 @@ class ViewController: UITableViewController, UIImagePickerControllerDelegate, UI
         return cell
     }
     
-//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Picture", for: indexPath) as? PictureCell else {
-//            fatalError("Unable to dequeue a PictureCell")
-//        }
-//
-//        let picture = pictures[indexPath.item]
-//        cell.name.text = picture.caption
-//
-//        let path = getDocumentsDirectory().appendingPathComponent(picture.name)
-//
-//        cell.imageView.image = UIImage(contentsOfFile: path.path)
-//        cell.imageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
-//        cell.imageView.layer.borderWidth = 2
-//        cell.imageView.layer.cornerRadius = 3
-//        cell.layer.cornerRadius = 7
-//
-//        return cell
-//    }
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let vc = storyboard?.instantiateViewController(withIdentifier: "PictureView") as? PictureViewController {
-            vc.selectedImage = pictures[indexPath.row].name
+            
+            let path = getDocumentsDirectory().appendingPathComponent(pictures[indexPath.row].name)
+            vc.selectedImage = path.path
             vc.imageCaption = pictures[indexPath.row].caption
             navigationController?.pushViewController(vc, animated: true)
             tableView.reloadData()
         }
     }
-//    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let picture = pictures[indexPath.item]
-//
-//        let ac = UIAlertController(title: "Modify Picture", message: "Do you want to (re)name the picture or delete the picture?", preferredStyle: .alert)
-//        ac.addTextField()
-//        ac.addAction(UIAlertAction(title: "Rename", style: .default) { [weak self, weak ac] _ in
-//            guard let newCaption = ac?.textFields?[0].text else { return }
-//            picture.caption = newCaption
-//            self?.save()
-//            self?.collectionView.reloadData()
-//        })
-//        ac.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
-//            self?.pictures.remove(at: indexPath.item)
-//            self?.save()
-//            self?.collectionView.reloadData()
-//        })
-//        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-//
-//        present(ac, animated: true)
-//    }
-    
+
     @objc func addNewPicture() {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
@@ -104,19 +67,33 @@ class ViewController: UITableViewController, UIImagePickerControllerDelegate, UI
         guard let image = info[.editedImage] as? UIImage else { return }
         
         let imageName = UUID().uuidString
-        let imagePath = getDocumentsDirectory().appendingPathExtension(imageName)
+        let imagePath = getDocumentsDirectory().appendingPathComponent(imageName)
         
         if let jgegData = image.jpegData(compressionQuality: 0.8) {
             try? jgegData.write(to: imagePath)
         }
         
         let picture = Picture(for: imageName, caption: "picture \(pictures.count)")
-        print("adding a picture with caption \(picture.caption) and filename \(imagePath)")
+
         pictures.append(picture)
         save()
         tableView.reloadData()
         
         dismiss(animated: true)
+        
+        let ac = UIAlertController(title: "Add Caption", message: "would you like to add a caption?", preferredStyle: .alert)
+        ac.addTextField(configurationHandler: { (textField) -> Void in
+            textField.text = "No Caption"
+        })
+        ac.addAction(UIAlertAction(title: "Add", style: .default) { [weak self, weak ac] _ in
+            guard let newCaption = ac?.textFields?[0].text else { return }
+            picture.caption = newCaption
+            self?.save()
+            self?.tableView.reloadData()
+        })
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(ac, animated: true)
     }
     
     func getDocumentsDirectory() -> URL {
