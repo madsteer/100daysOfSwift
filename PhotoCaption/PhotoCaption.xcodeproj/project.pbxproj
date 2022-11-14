@@ -7,15 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D8315A972922C6EB000475AF /* PictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8315A962922C6EB000475AF /* PictureViewController.swift */; };
 		D8F13900291EF47C007585C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F138FF291EF47C007585C5 /* AppDelegate.swift */; };
 		D8F13902291EF47C007585C5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F13901291EF47C007585C5 /* SceneDelegate.swift */; };
 		D8F13904291EF47C007585C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F13903291EF47C007585C5 /* ViewController.swift */; };
 		D8F13907291EF47C007585C5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8F13905291EF47C007585C5 /* Main.storyboard */; };
 		D8F13909291EF47E007585C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8F13908291EF47E007585C5 /* Assets.xcassets */; };
 		D8F1390C291EF47E007585C5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8F1390A291EF47E007585C5 /* LaunchScreen.storyboard */; };
+		D8F139162921ADEC007585C5 /* Picture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F139152921ADEC007585C5 /* Picture.swift */; };
+		D8F139182921B3EB007585C5 /* PictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F139172921B3EB007585C5 /* PictureCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D8315A962922C6EB000475AF /* PictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureViewController.swift; sourceTree = "<group>"; };
 		D8F138FC291EF47C007585C5 /* PhotoCaption.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoCaption.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8F138FF291EF47C007585C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8F13901291EF47C007585C5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +28,8 @@
 		D8F13908291EF47E007585C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8F1390B291EF47E007585C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D8F1390D291EF47E007585C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8F139152921ADEC007585C5 /* Picture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Picture.swift; sourceTree = "<group>"; };
+		D8F139172921B3EB007585C5 /* PictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +65,9 @@
 				D8F138FF291EF47C007585C5 /* AppDelegate.swift */,
 				D8F13901291EF47C007585C5 /* SceneDelegate.swift */,
 				D8F13903291EF47C007585C5 /* ViewController.swift */,
+				D8315A962922C6EB000475AF /* PictureViewController.swift */,
+				D8F139172921B3EB007585C5 /* PictureCell.swift */,
+				D8F139152921ADEC007585C5 /* Picture.swift */,
 				D8F13905291EF47C007585C5 /* Main.storyboard */,
 				D8F13908291EF47E007585C5 /* Assets.xcassets */,
 				D8F1390A291EF47E007585C5 /* LaunchScreen.storyboard */,
@@ -139,8 +148,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8F13904291EF47C007585C5 /* ViewController.swift in Sources */,
+				D8315A972922C6EB000475AF /* PictureViewController.swift in Sources */,
+				D8F139162921ADEC007585C5 /* Picture.swift in Sources */,
 				D8F13900291EF47C007585C5 /* AppDelegate.swift in Sources */,
 				D8F13902291EF47C007585C5 /* SceneDelegate.swift in Sources */,
+				D8F139182921B3EB007585C5 /* PictureCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,7 +299,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = D4T8Q7D5T9;
+				DEVELOPMENT_TEAM = NEHETH8VMY;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PhotoCaption/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
