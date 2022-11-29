@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var intensity: UISlider!
+    @IBOutlet var filterButton: UIButton!
     var currentImage: UIImage!
     
     var context: CIContext!
@@ -24,6 +25,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate & UINavi
         
         context = CIContext()
         currentFilter = CIFilter(name: "CISepiaTone")
+        filterButton.setTitle("change \(currentFilter.name.replacingOccurrences(of: "CI", with: ""))", for: .normal)
     }
 
 
@@ -109,8 +111,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate & UINavi
     }
     
     func setFilter(action: UIAlertAction) {
-        guard currentImage != nil else { return }
         guard let actionTitle = action.title else { return }
+        filterButton.setTitle("Change \(actionTitle.replacingOccurrences(of: "CI", with: ""))", for: .normal)
+        
+        guard currentImage != nil else { return }
         
         currentFilter = CIFilter(name: actionTitle)
         
