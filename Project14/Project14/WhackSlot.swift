@@ -8,7 +8,7 @@
 import SpriteKit
 import UIKit
 
-class WhackSLot: SKNode {
+class WhackSlot: SKNode {
     var charNode: SKSpriteNode!
     
     var isVisible = false

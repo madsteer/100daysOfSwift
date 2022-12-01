@@ -8,7 +8,7 @@
 import SpriteKit
 
 class GameScene: SKScene {
-    var slots = [WhackSLot]()
+    var slots = [WhackSlot]()
     var gameScore: SKLabelNode!
     var popupTime = 0.85
     var numRounds = 0
@@ -49,7 +49,7 @@ class GameScene: SKScene {
         let tappedNodes = nodes(at: location)
         
         for node in tappedNodes {
-            guard let whackSlot = node.parent?.parent as? WhackSLot else { continue }
+            guard let whackSlot = node.parent?.parent as? WhackSlot else { continue }
             
             if !whackSlot.isVisible { continue }
             if whackSlot.isHit { continue }
@@ -72,7 +72,7 @@ class GameScene: SKScene {
     }
     
     func createSlot(at position: CGPoint) {
-        let slot = WhackSLot()
+        let slot = WhackSlot()
         slot.configure(at: position)
         addChild(slot)
         slots.append(slot)
