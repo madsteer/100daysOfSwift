@@ -179,7 +179,10 @@ class ViewController: UIViewController {
     func isLevelFinished() -> Bool {
         var result = true
         for button in letterButtons {
-            result = button.isHidden == true
+            if button.isHidden == false {
+                result = false
+                break
+            }
         }
         return result
     }
