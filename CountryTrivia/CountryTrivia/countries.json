@@ -1,0 +1,57 @@
+[
+    {
+        "name": "Germany",
+        "capital": "Berlin",
+        "national_language": "German",
+        "area_in_sq_km": 357022,
+        "population": 83695430,
+        "gdp": "5.37 Trillion",
+        "currency": "Euro",
+        "timezone": "CET",
+        "driving_side": "right"
+    },
+    {
+        "name": "United States",
+        "capital": "Washington D.C.",
+        "national_language": "English",
+        "area_in_sq_km": 9833520,
+        "population": 331893745,
+        "gdp": "25.035 Trillion",
+        "currency": "U.S. dollar",
+        "timezone": "UTC -4 to -12, 10, 11",
+        "driving_side": "right"
+    },
+    {
+        "name": "Mexico",
+        "capital": "Mexico City",
+        "national_language": "Spanish",
+        "area_in_sq_km": 1872550,
+        "population": 129150971,
+        "gdp": "2.92 Trillion",
+        "currency": "Mexican Peso",
+        "timezone": "UTC -8 to -5",
+        "driving_side": "right"
+    },
+    {
+        "name": "Canada",
+        "capital": "Ottawa",
+        "national_language": "English & French",
+        "area_in_sq_km": 9984670,
+        "population": 38929902,
+        "gdp": "2.24 trillion",
+        "currency": "Canadian dollar",
+        "timezone": "UTC -3.5 to -8",
+        "driving_side": "right"
+    },
+    {
+        "name": "United Kingdom",
+        "capital": "London",
+        "national_language": "English",
+        "area_in_sq_km": 242495,
+        "population": 67791400,
+        "gdp": "3.776 Trillion",
+        "currency": "British Pound",
+        "timezone": "WET",
+        "driving_side": "left"
+    }
+]
