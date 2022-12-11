@@ -16,7 +16,10 @@ class DetailViewController: UITableViewController {
 
         guard let c = country else { fatalError("the country property was never populated") }
         
-        attributes.append("Name:               \(c.name)")
+        title = c.name
+        navigationController?.navigationBar.prefersLargeTitles = false
+        
+        attributes.append("") // spacer
         attributes.append("Capital:            \(c.capital)")
         attributes.append("Population:         \(c.population)")
         attributes.append("National Language:  \(c.nationalLanguage)")

@@ -13,6 +13,9 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Countries"
+        navigationController?.navigationBar.prefersLargeTitles = true
+
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         guard let url = Bundle.main.url(forResource: "countries", withExtension: "json")  else { fatalError("Can't load countries file")}
