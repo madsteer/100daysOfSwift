@@ -20,13 +20,13 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let rome = Capital(title: "Rome", coordinate: CLLocationCoordinate2D(latitude: 41.9, longitude: 12.5), info: "Has a whole country inside it.")
         let washington = Capital(title: "Washington DC", coordinate: CLLocationCoordinate2D(latitude: 38.895111, longitude: -77.036667), info: "Named after George himself.")
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Change Map", style: .plain, target: self, action: #selector(selectDifferentMap))
 //        mapView.addAnnotation(london)
 //        mapView.addAnnotation(oslo)
 //        mapView.addAnnotation(paris)
 //        mapView.addAnnotation(rome)
 //        mapView.addAnnotation(washington)
         mapView.addAnnotations([london, oslo, paris, rome, washington])
-        
     }
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -60,6 +60,32 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
+    }
+    
+    @objc func selectDifferentMap() {
+        let ac = UIAlertController(title: "Map type", message: "change type of map shown", preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Standard", style: .default, handler: changeMap))
+        ac.addAction(UIAlertAction(title: "Satellite", style: .default, handler: changeMap))
+        ac.addAction(UIAlertAction(title: "Hybrid", style: .default, handler: changeMap))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(ac, animated: true)
+    }
+    
+    func changeMap(action: UIAlertAction) {
+        var mapType: MKMapType
+        
+        guard let actionTitle = action.title else { return }
+        
+        switch actionTitle {
+        case "Satellite":
+            mapType = .satellite
+        case "Hybrid":
+            mapType = .hybrid
+        default:
+            mapType = .standard
+        }
+        
+        mapView.mapType = mapType
     }
 
 }
