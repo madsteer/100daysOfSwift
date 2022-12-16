@@ -14,6 +14,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var possibleEnemies = [ "ball", "hammer", "tv" ]
     var gameTimer: Timer?
     var isGameOver = false
+    var timeInterval = 1.0
+    var numEnemiesCreated = 0
     
     var score = 0 {
         didSet {
@@ -46,7 +48,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = .zero
         physicsWorld.contactDelegate = self
         
-        gameTimer = Timer.scheduledTimer(timeInterval: 0.35, target: self, selector: #selector(createEnemy), userInfo: nil, repeats: true)
+        gameTimer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(createEnemy), userInfo: nil, repeats: true)
     }
     
     @objc func createEnemy() {
@@ -62,6 +64,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         sprite.physicsBody?.angularVelocity = 5 // spin rate
         sprite.physicsBody?.linearDamping = 0 // don't slow down
         sprite.physicsBody?.angularDamping = 0 // don't stop spinning
+        
+        numEnemiesCreated += 1
+        
+        if numEnemiesCreated >= 20 {
+            numEnemiesCreated = 0
+            if timeInterval > 0.1 {
+                timeInterval -= 0.1
+                gameTimer?.invalidate()
+                gameTimer = Timer.scheduledTimer(timeInterval: timeInterval, target: self, selector: #selector(createEnemy), userInfo: nil, repeats: true)
+            }
+        }
     }
 
     override func update(_ currentTime: TimeInterval) {
@@ -95,6 +108,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(explosion)
         
         player.removeFromParent()
-        isGameOver = true
-    }
+        isGameOver = true    }
 }
