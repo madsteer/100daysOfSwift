@@ -12,7 +12,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("I'm inside the viewDidLoad() method")
+        assert(1 == 1, "Math Failure")
+        assert(1 == 2, "math failure")
     }
 }
 
