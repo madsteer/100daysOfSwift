@@ -9,16 +9,23 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreLabel: SKLabelNode!
+    var roundsLabel: SKLabelNode!
+    var roundsIcon: SKSpriteNode!
     
-    var possibleTargets = [ "target0", "target1", "target2", "target3" ]
+    var possibleTargets = [ "target0", "target1", "target2", "target3", "Denied" ]
     var possibleHeights = [ 1, 2, 3 ]
     var targetTimer: Timer?
     var gameTimer: Timer?
     var finishTimer: Timer?
+    var numRounds = 6 {
+        didSet {
+            roundsLabel.text = "Rounds: \(numRounds)"
+        }
+    }
 
     var score = 0 {
         didSet {
-            scoreLabel.text = "Score \(score)"
+            scoreLabel.text = "Score: \(score)"
         }
     }
     
@@ -28,6 +35,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.size = CGSize(width: self.size.width, height: self.size.height)
         background.blendMode = .replace
         background.zPosition = -2
+        background.name = "background"
         addChild(background)
         
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
@@ -37,13 +45,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.zPosition = -1
         addChild(scoreLabel)
         
+        roundsLabel = SKLabelNode(fontNamed: "Chalkduster")
+        roundsLabel.text = "Rounds: 6"
+        roundsLabel.position = CGPoint(x: 830, y: 60)
+        roundsLabel.fontSize = 32
+        roundsLabel.zPosition = -1
+        addChild(roundsLabel)
+        
+        roundsIcon = SKSpriteNode(imageNamed: "shots3")
+        roundsIcon.position = CGPoint(x: 480, y: 80)
+        roundsIcon.name = "rounds"
+        addChild(roundsIcon)
+
         score = 0
+        numRounds = 6
         
         physicsWorld.gravity = .zero
         physicsWorld.contactDelegate = self
         
-        gameTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(finishTargets), userInfo: nil, repeats: false)
-        targetTimer = Timer.scheduledTimer(timeInterval: Double.random(in: 1...3), target: self, selector: #selector(createTarget), userInfo: nil, repeats: true)
+        gameTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(finishTargets), userInfo: nil, repeats: false)
+        targetTimer = Timer.scheduledTimer(timeInterval: Double.random(in: 0.5...2), target: self, selector: #selector(createTarget), userInfo: nil, repeats: true)
     }
          
     @objc func finishTargets() {
@@ -52,7 +73,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func gameOver()  {
-        let count =  (children.filter { $0.name == "target" }).count
+        let count =  (children.filter { $0.name == "target" || $0.name == "decoy" }).count
         if count == 0 {
             finishTimer?.invalidate()
             
@@ -72,25 +93,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let yStart: Int
         switch height {
         case 1:
-            yStart = 200
+            yStart = 210
         case 2:
-            yStart = 400
+            yStart = 420
         default:
-            yStart = 600
+            yStart = 630
         }
         
         let sprite = SKSpriteNode(imageNamed: target)
         sprite.position = CGPoint(x: xStart, y: yStart)
         addChild(sprite)
         
-        sprite.name = "target"
+        sprite.name = (target == "Denied") ? "decoy" : "target"
         sprite.physicsBody = SKPhysicsBody(texture: sprite.texture!, size: sprite.size)
         sprite.physicsBody?.categoryBitMask = 1
         sprite.physicsBody?.velocity = CGVector(dx: xVector, dy: 0)
         sprite.physicsBody?.linearDamping = 0 // don't slow down
         sprite.physicsBody?.angularDamping = 0 // don't stop spinning
-        
-        
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -99,5 +118,55 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 node.removeFromParent()
             }
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        let tappedNodes = nodes(at: location)
+        
+        guard tappedNodes.count > 0 else { return }
+        let node = tappedNodes[0]
+        
+//        for node in tappedNodes {
+//            if node.zPosition >= 0 {
+                if node.name == "target" {
+                    if numRounds > 0 {
+                        score += 1
+                        numRounds -= 1
+                        run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
+                        if let smoke = SKEmitterNode(fileNamed: "SmokeParticles") {
+                            smoke.position = node.position
+                            addChild(smoke)
+                            let removeSmoke = SKAction.removeFromParent()
+                            let smokeDuration = SKAction.wait(forDuration: 1)
+                            smoke.run(SKAction.sequence([ smokeDuration, removeSmoke ]))
+                            node.removeFromParent()
+                        }
+                    } else {
+                        run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
+                    }
+                } else if node.name == "decoy" {
+                    if numRounds > 0 {
+                        score -= 2
+                        numRounds -= 1
+                        run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
+                        node.removeFromParent()
+                    } else {
+                        run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
+                    }
+                } else if node.name == "rounds" {
+                    run(SKAction.playSoundFileNamed("reload.wav", waitForCompletion: false))
+                    numRounds = 6
+                } else {
+                    if numRounds > 0 {
+                        numRounds -= 1
+                        run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
+                    } else {
+                        run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
+                    }
+                }
+//            }
+//        }
     }
 }
