@@ -128,45 +128,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard tappedNodes.count > 0 else { return }
         let node = tappedNodes[0]
         
-//        for node in tappedNodes {
-//            if node.zPosition >= 0 {
-                if node.name == "target" {
-                    if numRounds > 0 {
-                        score += 1
-                        numRounds -= 1
-                        run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
-                        if let smoke = SKEmitterNode(fileNamed: "SmokeParticles") {
-                            smoke.position = node.position
-                            addChild(smoke)
-                            let removeSmoke = SKAction.removeFromParent()
-                            let smokeDuration = SKAction.wait(forDuration: 1)
-                            smoke.run(SKAction.sequence([ smokeDuration, removeSmoke ]))
-                            node.removeFromParent()
-                        }
-                    } else {
-                        run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
-                    }
-                } else if node.name == "decoy" {
-                    if numRounds > 0 {
-                        score -= 2
-                        numRounds -= 1
-                        run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
-                        node.removeFromParent()
-                    } else {
-                        run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
-                    }
-                } else if node.name == "rounds" {
-                    run(SKAction.playSoundFileNamed("reload.wav", waitForCompletion: false))
-                    numRounds = 6
-                } else {
-                    if numRounds > 0 {
-                        numRounds -= 1
-                        run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
-                    } else {
-                        run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
-                    }
+        if node.name == "target" {
+            if numRounds > 0 {
+                score += 1
+                numRounds -= 1
+                run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
+                if let smoke = SKEmitterNode(fileNamed: "SmokeParticles") {
+                    smoke.position = node.position
+                    addChild(smoke)
+                    let removeSmoke = SKAction.removeFromParent()
+                    let smokeDuration = SKAction.wait(forDuration: 1)
+                    smoke.run(SKAction.sequence([ smokeDuration, removeSmoke ]))
+                    node.removeFromParent()
                 }
-//            }
-//        }
+            } else {
+                run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
+            }
+        } else if node.name == "decoy" {
+            if numRounds > 0 {
+                score -= 2
+                numRounds -= 1
+                run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
+                node.removeFromParent()
+            } else {
+                run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
+            }
+        } else if node.name == "rounds" {
+            run(SKAction.playSoundFileNamed("reload.wav", waitForCompletion: false))
+            numRounds = 6
+        } else {
+            if numRounds > 0 {
+                numRounds -= 1
+                run(SKAction.playSoundFileNamed("gunFire.wav", waitForCompletion: false))
+            } else {
+                run(SKAction.playSoundFileNamed("emptyFire.wav", waitForCompletion: false))
+            }
+        }
     }
 }
