@@ -19,6 +19,7 @@ class ActionViewController: UIViewController {
         super.viewDidLoad()
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(preBuiltScripts))
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -67,5 +68,16 @@ class ActionViewController: UIViewController {
         
         let selectedRange = script.selectedRange
         script.scrollRangeToVisible(selectedRange)
+    }
+    
+    @objc func preBuiltScripts() {
+        let ac = UIAlertController(title: "Script Choices", message: "choose from one of the prebuilt javascript scripts.", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "alert document title", style: .default) { [ weak self ] _ in
+            self?.script.text = "alert(document.title);"
+            self?.view.reloadInputViews()
+        })
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(ac, animated: true)
     }
 }
