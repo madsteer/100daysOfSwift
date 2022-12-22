@@ -14,9 +14,15 @@ class ActionViewController: UIViewController {
     
     var pageTitle = ""
     var pageUrl = ""
+    var savedScripts = [String: [String]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let defaults = UserDefaults.standard
+        if let saved = defaults.object(forKey: "savedScripts") as? [String: [String]] {
+            savedScripts = saved
+        }
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(preBuiltScripts))
@@ -50,6 +56,16 @@ class ActionViewController: UIViewController {
         let customJavaScript = NSItemProvider(item: webDictionary, typeIdentifier: UTType.propertyList.identifier as String)
         item.attachments = [customJavaScript]
         extensionContext?.completeRequest(returningItems: [item])
+        
+        let url = URL(string: pageUrl)
+        if let host = url?.host {
+            var scripts = [String]()
+            let originalScripts = savedScripts[host]
+            scripts.append(contentsOf: originalScripts ?? [])
+            scripts.append(script.text)
+            savedScripts[host] = scripts
+            persist()
+        }
     }
 
     @objc func adjustForKeyboard(notification: Notification) {
@@ -79,5 +95,10 @@ class ActionViewController: UIViewController {
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
         present(ac, animated: true)
+    }
+    
+    func persist() {
+        let defaults = UserDefaults.standard
+        defaults.set(savedScripts, forKey: "savedScripts")
     }
 }
