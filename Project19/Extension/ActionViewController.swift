@@ -14,18 +14,22 @@ class ActionViewController: UIViewController {
     
     var pageTitle = ""
     var pageUrl = ""
-    var savedScripts = [String: [String]]()
+    var savedScripts = [String: String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         let defaults = UserDefaults.standard
-        if let saved = defaults.object(forKey: "savedScripts") as? [String: [String]] {
+        if let saved = defaults.object(forKey: "savedScripts") as? [String: String] {
             savedScripts = saved
         }
+        
+        print("saved scripts are \(savedScripts)")
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(preBuiltScripts))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(pickFromSavedScripts))
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -49,6 +53,24 @@ class ActionViewController: UIViewController {
     }
 
     @IBAction func done() {
+        let ac = UIAlertController(title: "Name your Script", message: "Would you like to name and save your script?", preferredStyle: .alert)
+        ac.addTextField(configurationHandler: { (textField) -> Void in
+            textField.placeholder = "No name"
+        })
+        ac.addAction(UIAlertAction(title: "Save & Run", style: .default) { [ weak self, weak ac] _ in
+            guard let newName = ac?.textFields?[0].text else { return }
+            self?.savedScripts[newName] = self?.script.text
+            self?.persist()
+            self?.performDone()
+        })
+        ac.addAction(UIAlertAction(title: "Just Run", style: .cancel) { [weak self] _ in
+            self?.performDone()
+        })
+        
+        present(ac, animated: true)
+    }
+    
+    func performDone() {
         // essentially doing the opposite of what we're doing in viewDidLoad above
         let item = NSExtensionItem()
         let argument: NSDictionary = ["customJavaScript": script.text!]
@@ -56,16 +78,6 @@ class ActionViewController: UIViewController {
         let customJavaScript = NSItemProvider(item: webDictionary, typeIdentifier: UTType.propertyList.identifier as String)
         item.attachments = [customJavaScript]
         extensionContext?.completeRequest(returningItems: [item])
-        
-        let url = URL(string: pageUrl)
-        if let host = url?.host {
-            var scripts = [String]()
-            let originalScripts = savedScripts[host]
-            scripts.append(contentsOf: originalScripts ?? [])
-            scripts.append(script.text)
-            savedScripts[host] = scripts
-            persist()
-        }
     }
 
     @objc func adjustForKeyboard(notification: Notification) {
@@ -86,15 +98,12 @@ class ActionViewController: UIViewController {
         script.scrollRangeToVisible(selectedRange)
     }
     
-    @objc func preBuiltScripts() {
-        let ac = UIAlertController(title: "Script Choices", message: "choose from one of the prebuilt javascript scripts.", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "alert document title", style: .default) { [ weak self ] _ in
-            self?.script.text = "alert(document.title);"
-            self?.view.reloadInputViews()
-        })
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        
-        present(ac, animated: true)
+    @objc func pickFromSavedScripts() {
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "SavedScriptsView") as? NamedScriptsTableViewController {
+            vc.previousViewController = self
+            navigationController?.pushViewController(vc, animated: true)
+            view.reloadInputViews()
+        }
     }
     
     func persist() {

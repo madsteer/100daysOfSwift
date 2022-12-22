@@ -19,6 +19,7 @@
 		D85245CF29526CD600EE3597 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D85245CD29526CD600EE3597 /* MainInterface.storyboard */; };
 		D85245D329526CD600EE3597 /* Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D85245C429526CD600EE3597 /* Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D85245D92952727D00EE3597 /* Action.js in Resources */ = {isa = PBXBuildFile; fileRef = D85245D82952727D00EE3597 /* Action.js */; };
+		D8C2F9CA2954BFAB0047A236 /* NamedScriptsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C2F9C92954BFAB0047A236 /* NamedScriptsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		D85245CE29526CD600EE3597 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		D85245D029526CD600EE3597 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D85245D82952727D00EE3597 /* Action.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Action.js; sourceTree = "<group>"; };
+		D8C2F9C92954BFAB0047A236 /* NamedScriptsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedScriptsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 			children = (
 				D85245C929526CD600EE3597 /* Media.xcassets */,
 				D85245CB29526CD600EE3597 /* ActionViewController.swift */,
+				D8C2F9C92954BFAB0047A236 /* NamedScriptsTableViewController.swift */,
 				D85245CD29526CD600EE3597 /* MainInterface.storyboard */,
 				D85245D029526CD600EE3597 /* Info.plist */,
 				D85245D82952727D00EE3597 /* Action.js */,
@@ -249,6 +252,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8C2F9CA2954BFAB0047A236 /* NamedScriptsTableViewController.swift in Sources */,
 				D85245CC29526CD600EE3597 /* ActionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
