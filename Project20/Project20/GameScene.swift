@@ -10,6 +10,7 @@ import SpriteKit
 class GameScene: SKScene {
     var gameTimer: Timer?
     var fireworks = [SKNode]()
+    var scoreLabel: SKLabelNode!
     
     let leftEdge = -22
     let bottomEdge = -22
@@ -17,7 +18,7 @@ class GameScene: SKScene {
     
     var score = 0 {
         didSet {
-            
+            scoreLabel.text = "Score: \(score)"
         }
     }
     
@@ -25,8 +26,15 @@ class GameScene: SKScene {
         let background = SKSpriteNode(imageNamed: "background")
         background.position = CGPoint(x: 512, y: 384)
         background.blendMode = .replace
-        background.zPosition = -1
+        background.zPosition = -2
         addChild(background)
+        
+        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        scoreLabel.text = "Score: 0"
+        scoreLabel.position = CGPoint(x: 130, y: 50)
+        scoreLabel.fontSize = 48
+        scoreLabel.zPosition = -1
+        addChild(scoreLabel)
         
         gameTimer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: true)
         
