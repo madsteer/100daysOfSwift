@@ -9,6 +9,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     var gameTimer: Timer?
+    var finishTimer: Timer?
     var fireworks = [SKNode]()
     var scoreLabel: SKLabelNode!
     
@@ -21,6 +22,9 @@ class GameScene: SKScene {
             scoreLabel.text = "Score: \(score)"
         }
     }
+    
+    var numRounds = 0
+    let maxRounds = 10
     
     override func didMove(to view: SKView) {
         let background = SKSpriteNode(imageNamed: "background")
@@ -37,8 +41,6 @@ class GameScene: SKScene {
         addChild(scoreLabel)
         
         gameTimer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: true)
-        
-        
     }
     
     func createFirework(xMovement: CGFloat, x: Int, y: Int) {
@@ -76,6 +78,14 @@ class GameScene: SKScene {
     }
     
     @objc func launchFireworks() {
+        
+        if numRounds > maxRounds {
+            gameTimer?.invalidate()
+            finishTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(gameOver), userInfo: nil, repeats: true)
+            return
+        }
+        numRounds += 1
+        
         let movementAmount: CGFloat = 1800
         
         switch Int.random(in: 0...3) {
@@ -116,6 +126,18 @@ class GameScene: SKScene {
         }
     }
 
+    @objc func gameOver() {
+        let count = (children.filter { $0.name == "firework" }).count
+        if count == 0 {
+            finishTimer?.invalidate()
+            
+            let sprite = SKSpriteNode(imageNamed: "game-over")
+            sprite.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+            sprite.size = CGSize(width: self.size.width / 3, height: self.size.height / 3)
+            addChild(sprite)
+        }
+    }
+    
     func checkTouches(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
         
