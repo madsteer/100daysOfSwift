@@ -36,7 +36,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
-        
+
         let content = UNMutableNotificationContent()
         content.title = "Late wake up call"
         content.body = "The early bird catches the worm, but the second mouse gets the cheese."
@@ -73,12 +73,15 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             
             switch response.actionIdentifier {
             case UNNotificationDefaultActionIdentifier:
-                print("Default Identifier")
+                let ac = UIAlertController(title: "Default", message: "The default identifier was chosen.", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
             case "show":
-                print("Show more information...")
+                let ac = UIAlertController(title: "More", message: "Show more information ...", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
             default:
                 break
-                
             }
         }
         
