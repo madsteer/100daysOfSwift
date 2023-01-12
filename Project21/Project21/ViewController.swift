@@ -10,13 +10,13 @@ import UIKit
 
 class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     
-    let notificationCateogry = "alarm"
+    let notificationCategory = "alarm"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Register", style: .plain, target: self, action: #selector(registerLocal))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(scheduleLocal))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(scheduleLocalSelector))
     }
     
     
@@ -31,24 +31,38 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         }
     }
     
-    @objc func scheduleLocal() {
+    @objc func scheduleLocalSelector() {
+        let content = UNMutableNotificationContent()
+        content.title = "Late wake up call"
+        content.body = "The early bird catches the worm, but the second mouse gets the cheese."
+        content.categoryIdentifier = notificationCategory
+        content.userInfo = [ "customData": "fizzbuzz" ]
+        content.sound = .default
+        
+        scheduleLocal(existingContent: content)
+    }
+    
+    func scheduleLocal(existingContent: UNMutableNotificationContent? = nil, triggerInterval: Double = 5.0) {
         registerCategories()
         
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
 
-        let content = UNMutableNotificationContent()
-        content.title = "Late wake up call"
-        content.body = "The early bird catches the worm, but the second mouse gets the cheese."
-        content.categoryIdentifier = notificationCateogry
-        content.userInfo = [ "customData": "fizzbuzz" ]
-        content.sound = .default
+        let content = existingContent ?? UNMutableNotificationContent()
+        if (existingContent == nil) {
+            content.title = "Late wake up call"
+            content.body = "The early bird catches the worm, but the second mouse gets the cheese."
+            content.categoryIdentifier = notificationCategory
+            content.userInfo = [ "customData": "fizzbuzz" ]
+            content.sound = .default
+        }
         
-        var dateComponents = DateComponents()
-        dateComponents.hour = 10
-        dateComponents.minute = 30
-        //        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+//        var dateComponents = DateComponents()
+//        dateComponents.hour = 10
+//        dateComponents.minute = 30
+//        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerInterval, repeats: false)
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         
@@ -60,9 +74,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         center.delegate = self
         
         let show = UNNotificationAction(identifier: "show", title: "Tell me more...", options: .foreground)
-        let cagegory = UNNotificationCategory(identifier: notificationCateogry, actions: [show], intentIdentifiers: [])
+        let later = UNNotificationAction(identifier: "later", title: "Remind me later", options: .foreground)
+        let category = UNNotificationCategory(identifier: notificationCategory, actions: [show, later], intentIdentifiers: [])
         
-        center.setNotificationCategories([cagegory])
+        center.setNotificationCategories([category])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -80,6 +95,15 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
                 let ac = UIAlertController(title: "More", message: "Show more information ...", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "OK", style: .default))
                 present(ac, animated: true)
+            case "later":
+                let content = UNMutableNotificationContent()
+                content.title = "Reminder wake up call"
+                content.body = "who knows if there's any cheese left at this point."
+                content.categoryIdentifier = notificationCategory
+                content.userInfo = [ "customData": "foobar" ]
+                content.sound = .default
+                scheduleLocal(existingContent: content, triggerInterval: 86400.0)
+                print("a 24 hour delayed reminder was set")
             default:
                 break
             }
