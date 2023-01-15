@@ -14,23 +14,13 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let defaults = UserDefaults.standard
-        if let savedNotes = defaults.object(forKey: "notes") as? Data {
-            let jsonDecoder = JSONDecoder()
-            
-            do {
-                notes = try jsonDecoder.decode([Note].self, from: savedNotes)
-            } catch {
-                print("failed to load notes from user defaults")
-            }
-        }
-        
+        refreshData()
+                
         title = "Better Notes"
         navigationItem.largeTitleDisplayMode = .automatic
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(addNote))
     }
-
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes.count
@@ -47,6 +37,13 @@ class ViewController: UITableViewController {
             vc.noteTitle = notes[indexPath.row].title
             navigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        refreshData()
+        tableView.reloadData()
     }
     
     @objc func addNote () {
@@ -68,6 +65,21 @@ class ViewController: UITableViewController {
         })
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(ac, animated: true)
+    }
+    
+    func refreshData() {
+        let defaults = UserDefaults.standard
+        if let savedNotes = defaults.object(forKey: "notes") as? Data {
+            let jsonDecoder = JSONDecoder()
+            
+            do {
+                notes = try jsonDecoder.decode([Note].self, from: savedNotes)
+            } catch {
+                print("failed to load notes from user defaults")
+            }
+        }
+        
+        notes.sort { $0.title < $1.title }
     }
     
     func persist() {
