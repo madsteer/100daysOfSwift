@@ -47,7 +47,6 @@ class NoteViewController: UIViewController {
         let deleteBarButtonItem = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deleteNote))
         let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareNote))
         navigationItem.rightBarButtonItems = [deleteBarButtonItem, shareBarButtonItem]
-//            .rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(addNote))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -69,7 +68,13 @@ class NoteViewController: UIViewController {
     }
     
     @objc func shareNote() {
-        
+        if let workingNote = workingNote {
+            let text = workingNote.title + "\n\n" + workingNote.body
+            
+            let vc = UIActivityViewController(activityItems: [text], applicationActivities: [])
+            vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+            present(vc, animated: true)
+        }
     }
         
     func persist() {
