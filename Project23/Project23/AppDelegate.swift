@@ -5,6 +5,7 @@
 //  Created by Cory Steers on 12/7/23.
 //
 
+import AVFoundation
 import UIKit
 
 @main
@@ -33,6 +34,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    }
+
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+        } catch  {
+            print("could not set session. err:\(error.localizedDescription)")
+        }
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("could not active session. err:\(error.localizedDescription)")
+        } 
     }
 
 
