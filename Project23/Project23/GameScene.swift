@@ -108,19 +108,16 @@ class GameScene: SKScene {
     }
 
     func redrawActiveSlice() {
-        // 1
         if activeSlicePoints.count < 2 {
             activeSliceBG.path = nil
             activeSliceFG.path = nil
             return
         }
 
-        // 2
         if activeSlicePoints.count > 12 {
             activeSlicePoints.removeFirst(activeSlicePoints.count - 12)
         }
 
-        // 3
         let path = UIBezierPath()
         path.move(to: activeSlicePoints[0])
 
@@ -128,7 +125,6 @@ class GameScene: SKScene {
             path.addLine(to: activeSlicePoints[i])
         }
 
-        // 4
         activeSliceBG.path = path.cgPath
         activeSliceFG.path = path.cgPath
     }
@@ -136,28 +132,23 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
 
-        // 1
         activeSlicePoints.removeAll(keepingCapacity: true)
 
-        // 2
         let location = touch.location(in: self)
         activeSlicePoints.append(location)
 
-        // 3
         redrawActiveSlice()
 
-        // 4
         activeSliceBG.removeAllActions()
         activeSliceFG.removeAllActions()
 
-        // 5
         activeSliceBG.alpha = 1
         activeSliceFG.alpha = 1
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard isGameEnded == false else { return }
-        
+
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         activeSlicePoints.append(location)
@@ -171,7 +162,7 @@ class GameScene: SKScene {
 
         for case let node as SKSpriteNode in nodesAtPoint {
             if node.name == "enemy" {
-                // destroy the penguine
+                // destroy the penguin
                 if let emitter = SKEmitterNode(fileNamed: "sliceHitEnemy") {
                     emitter.position = node.position
                     addChild(emitter)
