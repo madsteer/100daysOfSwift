@@ -43,6 +43,12 @@ class GameScene: SKScene {
 
     var isGameEnded = false
 
+    let createEnemyMinXPosition = 64
+    let createEnemyMaxXPosition = 960
+    let createEnemyYPosition = -128
+    let createEnemyMinAngularVelocity = -3.0
+    let createEnemyMaxAngularVelocity = 3.0
+
     override func didMove(to view: SKView) {
         let background = SKSpriteNode(imageNamed: "sliceBackground")
         background.position = CGPoint(x: 512, y: 384)
@@ -229,6 +235,15 @@ class GameScene: SKScene {
             livesImages[1].texture = SKTexture(imageNamed: "sliceLifeGone")
             livesImages[2].texture = SKTexture(imageNamed: "sliceLifeGone")
         }
+
+        let gameOver = SKLabelNode(fontNamed: "Chalkduster")
+        gameOver.horizontalAlignmentMode = .left
+        gameOver.fontSize = 80
+        gameOver.fontColor = .red
+        gameOver.text = "Game Over!"
+        gameOver.position = CGPoint(x: 270, y: 344)
+        gameOver.zPosition = 2
+        addChild(gameOver)
     }
 
     func playSwooshSound() {
@@ -291,10 +306,10 @@ class GameScene: SKScene {
             enemy.name = "enemy"
         }
 
-        let randomPosition = CGPoint(x: Int.random(in: 64...960), y: -128)
+        let randomPosition = CGPoint(x: Int.random(in: createEnemyMinXPosition...createEnemyMaxXPosition), y: createEnemyYPosition)
         enemy.position = randomPosition
 
-        let randomAngularVelocity = CGFloat.random(in: -3...3)
+        let randomAngularVelocity = CGFloat.random(in: createEnemyMinAngularVelocity...createEnemyMinAngularVelocity)
         let randomXVelocity: Int
 
         if randomPosition.x < 256 {
