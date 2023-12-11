@@ -8,11 +8,22 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import AVFoundation
 
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+            do {
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+            } catch  {
+                print("could not set session. err:\(error.localizedDescription)")
+            }
+            do {
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                print("could not active session. err:\(error.localizedDescription)")
+            }
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
