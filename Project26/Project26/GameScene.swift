@@ -17,6 +17,11 @@ enum CollisionTypes: UInt32 {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+    let levels = ["level1", "level2"]
+    let playerStarts = [CGPoint(x: 96, y: 672), CGPoint(x: 928, y: 672)]
+
+    var currentLevel = 0
+
     var player: SKSpriteNode!
     var lastTouchPosition: CGPoint?
 
@@ -31,11 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     override func didMove(to view: SKView) {
-        let background = SKSpriteNode(imageNamed: "background")
-        background.position = CGPoint(x: 512, y: 384)
-        background.blendMode = .replace
-        background.zPosition = -1
-        addChild(background)
+        drawBackground()
 
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.text = "Score: 0"
@@ -52,6 +53,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         motionManager = CMMotionManager()
         motionManager?.startAccelerometerUpdates()
+    }
+
+    func drawBackground() {
+        let background = SKSpriteNode(imageNamed: "background")
+        background.position = CGPoint(x: 512, y: 384)
+        background.blendMode = .replace
+        background.zPosition = -1
+        addChild(background)
     }
 
     func buildAWallSection(at position: CGPoint) {
@@ -109,7 +118,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func loadLevel() {
-        guard let levelURL = Bundle.main.url(forResource: "level1", withExtension: "txt") else {
+        guard let levelURL = Bundle.main.url(forResource: levels[currentLevel], withExtension: "txt") else {
             fatalError("Could not find level1.txt in app bundle.")
         }
         guard let levelString = try? String(contentsOf: levelURL) else {
@@ -122,17 +131,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             for (column, letter) in line.enumerated() {
                 let position = CGPoint(x: (64 * column) + 32, y: (64 * row) + 32)
 
-                if letter == "x" {
+                switch letter {
+                case " ":
+                    break
+                case "x":
                     buildAWallSection(at: position)
-                } else if letter == "v" {
+                case "v":
                     buildAVortex(at: position)
-                } else if letter == "s" {
+                case "s":
                     buildAStar(at: position)
-                } else if letter == "f" {
+                case "f":
                     buildAFinish(at: position)
-                } else if letter == " " {
-                    // this is an empty space.  do nothing!
-                } else {
+                default:
                     fatalError("Unknown level letter: '\(letter)'")
                 }
             }
@@ -141,7 +151,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     func createPlayer() {
         player = SKSpriteNode(imageNamed: "player")
-        player.position = CGPoint(x: 96, y: 672)
+        player.position = playerStarts[currentLevel]
         player.zPosition = 1
 
         player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width / 2)
@@ -222,7 +232,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             node.removeFromParent()
             score += 1
         } else if node.name == "finish" {
-            // next level
+            player.physicsBody?.isDynamic = false
+            isGameOver = true
+            currentLevel += 1
+            lastTouchPosition = nil
+
+            if currentLevel < levels.count {
+//                player.run(SKAction.removeFromParent())
+                removeAllChildren()
+
+                scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+                scoreLabel.text = "Score: \(score)"
+                scoreLabel.horizontalAlignmentMode = .left
+                scoreLabel.position = CGPoint(x: 12, y: 32)
+                scoreLabel.zPosition = 2
+                addChild(scoreLabel)
+
+                drawBackground()
+                loadLevel()
+                createPlayer()
+                isGameOver.toggle()
+            } else {
+                let gameOver = SKLabelNode(fontNamed: "Chalkduster")
+                gameOver.horizontalAlignmentMode = .left
+                gameOver.fontSize = 80
+                gameOver.fontColor = .red
+                gameOver.text = "Game Over!\nCongratulations!"
+                gameOver.position = CGPoint(x: 200, y: 544)
+                gameOver.zPosition = 2
+                addChild(gameOver)
+            }
         }
     }
 }
