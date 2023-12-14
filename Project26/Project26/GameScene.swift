@@ -14,11 +14,14 @@ enum CollisionTypes: UInt32 {
     case star = 4
     case vortex = 8
     case finish = 16
+    case teleport = 32
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     let levels = ["level1", "level2"]
     let playerStarts = [CGPoint(x: 96, y: 672), CGPoint(x: 928, y: 672)]
+    var teleportPositions = [CGPoint]()
+    var justTeleported = false
 
     var currentLevel = 0
 
@@ -61,92 +64,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.blendMode = .replace
         background.zPosition = -1
         addChild(background)
-    }
-
-    func buildAWallSection(at position: CGPoint) {
-        let node = SKSpriteNode(imageNamed: "block")
-        node.position = position
-
-        node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
-        node.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
-        node.physicsBody?.isDynamic = false
-
-        addChild(node)
-    }
-
-    func buildAVortex(at position: CGPoint) {
-        let node = SKSpriteNode(imageNamed: "vortex")
-        node.name = "vortex"
-        node.position = position
-        node.run(SKAction.repeatForever(SKAction.rotate(byAngle: .pi, duration: 1)))
-
-        node.physicsBody = SKPhysicsBody(circleOfRadius: node.size.width / 2)
-        node.physicsBody?.isDynamic = false
-        node.physicsBody?.categoryBitMask = CollisionTypes.vortex.rawValue
-        node.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
-        node.physicsBody?.collisionBitMask = 0
-
-        addChild(node)
-    }
-
-    func buildAStar(at position: CGPoint) {
-        let node = SKSpriteNode(imageNamed: "star")
-        node.name = "star"
-        node.physicsBody = SKPhysicsBody(circleOfRadius: node.size.width / 2)
-        node.physicsBody?.isDynamic = false
-
-        node.physicsBody?.categoryBitMask = CollisionTypes.star.rawValue
-        node.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
-        node.physicsBody?.collisionBitMask = 0
-        node.position = position
-
-        addChild(node)
-    }
-
-    func buildAFinish(at position: CGPoint) {
-        let node = SKSpriteNode(imageNamed: "finish")
-        node.name = "finish"
-        node.physicsBody = SKPhysicsBody(circleOfRadius: node.size.width / 2)
-        node.physicsBody?.isDynamic = false
-
-        node.physicsBody?.categoryBitMask = CollisionTypes.finish.rawValue
-        node.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
-        node.physicsBody?.collisionBitMask = 0
-        node.position = position
-
-        addChild(node)
-    }
-
-    func loadLevel() {
-        guard let levelURL = Bundle.main.url(forResource: levels[currentLevel], withExtension: "txt") else {
-            fatalError("Could not find level1.txt in app bundle.")
-        }
-        guard let levelString = try? String(contentsOf: levelURL) else {
-            fatalError("Could not load level1.txt from the app bundle.")
-        }
-
-        let lines = levelString.components(separatedBy: "\n")
-
-        for (row, line) in lines.reversed().enumerated() {
-            for (column, letter) in line.enumerated() {
-                let position = CGPoint(x: (64 * column) + 32, y: (64 * row) + 32)
-
-                switch letter {
-                case " ":
-                    break
-                case "x":
-                    buildAWallSection(at: position)
-                case "v":
-                    buildAVortex(at: position)
-                case "s":
-                    buildAStar(at: position)
-                case "f":
-                    buildAFinish(at: position)
-                default:
-                    fatalError("Unknown level letter: '\(letter)'")
-                }
-            }
-        }
     }
 
     func createPlayer() {
@@ -200,9 +117,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     func didBegin(_ contact: SKPhysicsContact) {
         guard let nodeA = contact.bodyA.node else {
+            justTeleported = false
             return
         }
         guard let nodeB = contact.bodyB.node else {
+            justTeleported = false
             return
         }
 
@@ -213,55 +132,4 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    func playerCollided(with node: SKNode) {
-        if node.name == "vortex" {
-            player.physicsBody?.isDynamic = false
-            isGameOver = true
-            score -= 1
-
-            let move = SKAction.move(to: node.position, duration: 0.25)
-            let scale = SKAction.scale(to: 0.0001, duration: 0.25)
-            let remove = SKAction.removeFromParent()
-            let sequence = SKAction.sequence([move, scale, remove])
-
-            player.run(sequence) { [weak self] in
-                self?.createPlayer()
-                self?.isGameOver = false
-            }
-        } else if node.name == "star" {
-            node.removeFromParent()
-            score += 1
-        } else if node.name == "finish" {
-            player.physicsBody?.isDynamic = false
-            isGameOver = true
-            currentLevel += 1
-            lastTouchPosition = nil
-
-            if currentLevel < levels.count {
-//                player.run(SKAction.removeFromParent())
-                removeAllChildren()
-
-                scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
-                scoreLabel.text = "Score: \(score)"
-                scoreLabel.horizontalAlignmentMode = .left
-                scoreLabel.position = CGPoint(x: 12, y: 32)
-                scoreLabel.zPosition = 2
-                addChild(scoreLabel)
-
-                drawBackground()
-                loadLevel()
-                createPlayer()
-                isGameOver.toggle()
-            } else {
-                let gameOver = SKLabelNode(fontNamed: "Chalkduster")
-                gameOver.horizontalAlignmentMode = .left
-                gameOver.fontSize = 80
-                gameOver.fontColor = .red
-                gameOver.text = "Game Over!\nCongratulations!"
-                gameOver.position = CGPoint(x: 200, y: 544)
-                gameOver.zPosition = 2
-                addChild(gameOver)
-            }
-        }
-    }
 }
